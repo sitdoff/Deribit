@@ -1,0 +1,31 @@
+[tool.pyright]
+reportIncompatibleMethodOverride = false
+reportIncompatibleVariableOverride = false
+
+[tool.black]
+line-length = 120
+
+[tool.isort]
+profile = "black"
+
+[tool.poetry]
+name = "deribit"
+version = "0.1.0"
+description = ""
+authors = ["Roman Ivanov <sitdoff@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+fastapi = {extras = ["all"], version = "^0.115.4"}
+uvicorn = {extras = ["standard"], version = "^0.32.0"}
+pytest = "^8.3.3"
+pytest-aiohttp = "^1.0.5"
+aioresponses = "^0.7.6"
+sqlalchemy = "^2.0.36"
+aiosqlite = "^0.20.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
