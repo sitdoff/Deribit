@@ -70,6 +70,7 @@ git clone git@github.com:sitdoff/Deribit.git
 ```bash
 docker build --tag=sitdoff/deribit . \
   && docker run -it \
+  -v deribit_db:/code/data \
   -p 8000:8000 \
   --name sitdoff-derebit \
   sitdoff/deribit:latest
