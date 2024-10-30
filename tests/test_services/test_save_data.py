@@ -1,6 +1,6 @@
 import logging
 from contextlib import asynccontextmanager
-from unittest.mock import AsyncMock, patch
+from unittest.mock import AsyncMock, MagicMock, patch
 
 from sqlalchemy.exc import DatabaseError, OperationalError
 
@@ -15,6 +15,7 @@ data = {
 
 async def test_save_data_success():
     mock_session = AsyncMock()
+    mock_session.add = MagicMock()
 
     @asynccontextmanager
     async def mocked_get_db_session():
@@ -29,6 +30,7 @@ async def test_save_data_success():
 
 async def test_save_data_operational_error(caplog):
     mock_session = AsyncMock()
+    mock_session.add = MagicMock()
     statement = "INSERT INTO price_index (ticker, index_price, timestamp) VALUES (?, ?, ?)"
     params = (TICKER, data["result"]["index_price"], data["usOut"])
     orig = Exception("Mocked operational error")
@@ -49,6 +51,7 @@ async def test_save_data_operational_error(caplog):
 
 async def test_save_data_database_error(caplog):
     mock_session = AsyncMock()
+    mock_session.add = MagicMock()
     statement = "INSERT INTO price_index (ticker, index_price, timestamp) VALUES (?, ?, ?)"
     params = (TICKER, data["result"]["index_price"], data["usOut"])
     orig = Exception("Mocked database error")

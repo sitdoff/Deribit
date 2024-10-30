@@ -47,7 +47,7 @@ async def save_data(data, ticker):
                 index_price=data["result"]["index_price"],
                 timestamp=data["usOut"],
             )
-            await session.add(price_index)
+            session.add(price_index)
             await session.commit()
     except (OperationalError, DatabaseError) as exc:
         logging.error("Error in database", exc_info=True)
