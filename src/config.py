@@ -11,3 +11,4 @@ class Currencies(Enum):
 
 
 DATABASE_URL = "sqlite+aiosqlite:///./src/sqlite.db"
+MICROSECONDS_IN_SECOND = 1_000_000

@@ -1,7 +1,7 @@
 import asyncio
 
-from ..database import create_db
-from ..services.services import get_currencies, get_price_index, save_data
+from src.database import create_db
+from src.services.services import get_currencies, get_price_index, save_data
 
 
 async def main():

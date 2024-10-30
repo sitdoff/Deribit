@@ -5,9 +5,9 @@ from typing import Any
 import websockets
 from sqlalchemy.exc import DatabaseError, OperationalError
 
-from ..config import Currencies
-from ..database import get_db_session
-from ..models.models import PriceIndex
+from src.config import Currencies
+from src.database import get_db_session
+from src.models.models import PriceIndex
 
 logger = logging.getLogger(__name__)
 
