@@ -2,7 +2,7 @@
 
 ## Что это?
 
-Это асинхронный клиент для криптобиржи Deribit (https://docs.deribit.com/),который каждую минуту через сокет забирает
+Это асинхронный клиент для криптобиржи Deribit (https://docs.deribit.com/), который каждую минуту через сокет забирает
 с биржи текущую цену btc_usd и eth_usd (index price валюты) после
 чего сохраняет в базу данных тикер валюты, текущую цену и время в UNIX timestamp.
 
@@ -27,6 +27,8 @@
 
   - `/index_prices/all?ticker={ticker}`
 
+  - Method: GET
+
   - `ticker` - валюта (btc_usd, eth_usd, ... )
 
 ---
@@ -35,6 +37,8 @@
 
   - `/index_prices/latest?ticker={ticker}`)
 
+  - Method: GET
+
   - `ticker` - валюта (btc_usd, eth_usd, ... )
 
 ---
@@ -42,6 +46,8 @@
 - Получение цены валюты с фильтром по дате
 
   - `/index_prices/date?ticker={ticker}&date={date}`
+
+  - Method: GET
 
   - `ticker` - валюта (btc_usd, eth_usd, ... )
 
