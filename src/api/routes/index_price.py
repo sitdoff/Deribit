@@ -66,11 +66,11 @@ async def get_latest_index_price(
     status_code=status.HTTP_200_OK,
     tags=["price_index"],
     summary="Получение записей по дате.",
-    description="Возвращает цену по указанной валюте с фильтром по дате.",
+    description="Возвращает цену по указанной валюте с фильтром по дате. Дата должна быть в формате DD.MM.YYYY .",
 )
 async def get_latest_index_price_by_date(
     ticker: Annotated[str, Query()],
-    target_date: Annotated[date, Query(alias="date")],
+    target_date: Annotated[str, Query(regex=r"^\d{2}\.\d{2}\.\d{4}$", alias="date")],
     get_session: AsyncSession = Depends(get_db_session),
 ):
     start, end = get_timestamp_range(target_date)
