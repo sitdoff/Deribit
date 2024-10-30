@@ -12,6 +12,7 @@ class Currencies(Enum):
 
 
 DATABASE_URL = "sqlite+aiosqlite:///./src/sqlite.db"
+WEBSOCKET_URL = "wss://test.deribit.com/ws/api/v2"
 WAITING_TIME_SECONDS = 60
 MICROSECONDS_IN_SECOND = 1_000_000
 SERVICE_NAME = "Client"

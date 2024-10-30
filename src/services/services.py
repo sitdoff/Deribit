@@ -5,7 +5,7 @@ from typing import Any
 import websockets
 from sqlalchemy.exc import DatabaseError, OperationalError
 
-from src.config import LOGGING_FORMAT, LOGGING_LEVEL, Currencies
+from src.config import LOGGING_FORMAT, LOGGING_LEVEL, WEBSOCKET_URL, Currencies
 from src.database import get_db_session
 from src.models.models import PriceIndex
 
@@ -69,7 +69,7 @@ async def get_price_index(ticker: str) -> dict[str, Any]:
     """
 
     try:
-        async with websockets.connect("wss://test.deribit.com/ws/api/v2") as websocket:
+        async with websockets.connect(WEBSOCKET_URL) as websocket:
             await websocket.send(get_message(ticker))
             while websocket.open:
                 response = await websocket.recv()
