@@ -1,3 +1,4 @@
+import logging
 from enum import Enum
 
 
@@ -12,3 +13,6 @@ class Currencies(Enum):
 
 DATABASE_URL = "sqlite+aiosqlite:///./src/sqlite.db"
 MICROSECONDS_IN_SECOND = 1_000_000
+SERVICE_NAME = "Client"
+LOGGING_LEVEL = logging.INFO
+LOGGING_FORMAT = f"{SERVICE_NAME} - %(asctime)s - %(levelname)s - %(message)s"
