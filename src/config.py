@@ -11,7 +11,7 @@ class Currencies(Enum):
     ETH_USD = "eth_usd"
 
 
-DATABASE_URL = "sqlite+aiosqlite:///./src/sqlite.db"
+DATABASE_URL = "sqlite+aiosqlite:///./src/data/sqlite.db"
 WEBSOCKET_URL = "wss://test.deribit.com/ws/api/v2"
 WAITING_TIME_SECONDS = 60
 MICROSECONDS_IN_SECOND = 1_000_000
