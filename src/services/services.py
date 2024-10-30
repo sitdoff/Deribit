@@ -47,10 +47,10 @@ async def save_data(data, ticker):
                 index_price=data["result"]["index_price"],
                 timestamp=data["usOut"],
             )
-            session.add(price_index)
+            await session.add(price_index)
             await session.commit()
     except (OperationalError, DatabaseError) as exc:
-        logging.error("Error in database", exc)
+        logging.error("Error in database", exc_info=True)
 
 
 async def get_price_index(ticker: str) -> dict[str, Any]:
@@ -65,4 +65,4 @@ async def get_price_index(ticker: str) -> dict[str, Any]:
                 response = await websocket.recv()
                 return json.loads(response)
     except websockets.WebSocketException as e:
-        logger.error("Websocket error", e)
+        logger.error("Websocket error", exc_info=True)
