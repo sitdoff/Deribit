@@ -1,6 +1,7 @@
 import asyncio
 import logging
 
+from src.config import WAITING_TIME_SECONDS
 from src.database import create_db
 from src.services.services import (
     get_currencies,
@@ -21,7 +22,7 @@ async def main():
             else:
                 logger.warning("Data is None")
 
-        await asyncio.sleep(60)
+        await asyncio.sleep(WAITING_TIME_SECONDS)
 
 
 if __name__ == "__main__":
