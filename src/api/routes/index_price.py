@@ -7,9 +7,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 
 from src.api.helpers.helpers import get_timestamp_range
-from src.api.models.price_index import PriceIndexPydantic
 from src.database import get_db_session
 from src.models.models import PriceIndex
+from src.schemas.price_index import PriceIndexPydantic
 
 router = APIRouter()
 
