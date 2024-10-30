@@ -17,6 +17,10 @@ router = APIRouter()
 @router.get(
     "/index_prices/all",
     response_model=list[PriceIndexPydantic],
+    status_code=status.HTTP_200_OK,
+    tags=["price_index"],
+    summary="Получение всех записей price_index.",
+    description="Возвращает все сохраненные данные по указанной валюте.",
 )
 async def get_all_index_prices(
     ticker: Annotated[str, Query()],
@@ -35,6 +39,10 @@ async def get_all_index_prices(
 @router.get(
     "/index_prices/latest",
     response_model=PriceIndexPydantic,
+    status_code=status.HTTP_200_OK,
+    tags=["price_index"],
+    summary="Получение последней записи price_index.",
+    description="Возвращает последнюю цену по указанной валюте.",
 )
 async def get_latest_index_price(
     ticker: Annotated[str, Query()],
@@ -52,7 +60,14 @@ async def get_latest_index_price(
     return price_index
 
 
-@router.get("/index_prices/date", response_model=list[PriceIndexPydantic])
+@router.get(
+    "/index_prices/date",
+    response_model=list[PriceIndexPydantic],
+    status_code=status.HTTP_200_OK,
+    tags=["price_index"],
+    summary="Получение записей по дате.",
+    description="Возвращает цену по указанной валюте с фильтром по дате.",
+)
 async def get_latest_index_price_by_date(
     ticker: Annotated[str, Query()],
     target_date: Annotated[date, Query(alias="date")],

@@ -22,7 +22,7 @@ async def get_currencies():
 
 def get_message(ticker):
     """
-    Создаем RPC запрос для получения index price.
+    Создаем запрос для получения index price.
     """
 
     msg = {

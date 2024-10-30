@@ -9,6 +9,10 @@ class Base(DeclarativeBase):
 
 
 class PriceIndex(Base):
+    """
+    SQLAlchemy модель для записи данных в базу.
+    """
+
     __tablename__ = "price_index"
 
     id: Mapped[int] = mapped_column(primary_key=True)
