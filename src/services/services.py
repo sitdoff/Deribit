@@ -1,11 +1,17 @@
+import asyncio
 import json
 import logging
-from typing import Any
 
 import websockets
 from sqlalchemy.exc import DatabaseError, OperationalError
 
-from src.config import LOGGING_FORMAT, LOGGING_LEVEL, WEBSOCKET_URL, Currencies
+from src.config import (
+    LOGGING_FORMAT,
+    LOGGING_LEVEL,
+    WAITING_TIME_SECONDS,
+    WEBSOCKET_URL,
+    Currencies,
+)
 from src.database import get_db_session
 from src.models.models import PriceIndex
 
@@ -22,9 +28,9 @@ def setup_logging():
     sqlalchemy_logger.setLevel(LOGGING_LEVEL)
 
 
-async def get_currencies():
+def get_currencies():
     """
-    Асинхронная функция-генератор поставляющая тикеры валют.
+    Функция-генератор поставляющая тикеры валют.
     """
     for currency in Currencies:
         yield currency.value
@@ -59,20 +65,35 @@ async def save_data(data, ticker):
             )
             session.add(price_index)
             await session.commit()
+            logger.info("Data for %s saved", ticker)
     except (OperationalError, DatabaseError) as exc:
         logging.error("Error in database", exc_info=True)
 
 
-async def get_price_index(ticker: str) -> dict[str, Any]:
+async def get_price_index(ticker, websocket):
     """
     Кидаем запрос в сокет и тянем ответ.
     """
+    message = get_message(ticker)
+    await websocket.send(message)
+    data = await websocket.recv()
+    logger.info("Data for %s received", ticker)
+    return json.loads(data)
 
+
+async def handle_ticker(ticker):
+    """
+    Функция обрабатывает получение и сохранение данных.
+    """
     try:
         async with websockets.connect(WEBSOCKET_URL) as websocket:
-            await websocket.send(get_message(ticker))
+            logger.info("Opened a websocket connection for %s", ticker)
             while websocket.open:
-                response = await websocket.recv()
-                return json.loads(response)
+                data = await get_price_index(ticker, websocket)
+                if not data is None:
+                    await save_data(data=data, ticker=ticker)
+                else:
+                    logger.warning("Data is None")
+                await asyncio.sleep(WAITING_TIME_SECONDS)
     except (websockets.WebSocketException, websockets.InvalidStatusCode) as e:
         logger.error("Websocket error", exc_info=True)
