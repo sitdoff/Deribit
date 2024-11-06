@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.database import get_db_session
 from src.schemas.price_index import PriceIndexPydantic
-from src.services.price_index_services import (
+from src.services.api_services.price_index_services import (
     get_price_indexes_all,
     get_price_indexes_by_date,
     get_price_indexes_latest,
