@@ -1,15 +1,16 @@
 from contextlib import _AsyncGeneratorContextManager
-from datetime import date
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.future import select
 
-from src.api.helpers.helpers import get_timestamp_range
 from src.database import get_db_session
-from src.models.models import PriceIndex
 from src.schemas.price_index import PriceIndexPydantic
+from src.services.price_index_services import (
+    get_price_indexes_all,
+    get_price_indexes_by_date,
+    get_price_indexes_latest,
+)
 
 router = APIRouter()
 
@@ -27,13 +28,12 @@ async def get_all_index_prices(
     get_session: _AsyncGeneratorContextManager = Depends(get_db_session),
 ):
     async with get_session as session:
-        price_indexes = await session.execute(select(PriceIndex).where(PriceIndex.ticker == ticker))
-        price_indexes_list = price_indexes.scalars().all()
+        result = await get_price_indexes_all(session, ticker)
 
-    if not price_indexes:
+    if not result:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Price index not found")
 
-    return price_indexes_list
+    return result
 
 
 @router.get(
@@ -49,15 +49,12 @@ async def get_latest_index_price(
     get_session: _AsyncGeneratorContextManager = Depends(get_db_session),
 ):
     async with get_session as session:
-        result = await session.execute(
-            select(PriceIndex).where(PriceIndex.ticker == ticker).order_by(PriceIndex.timestamp.desc()).limit(1)
-        )
-        price_index = result.scalar_one_or_none()
+        result = await get_price_indexes_latest(session, ticker)
 
-    if not price_index:
+    if result is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Price index not found")
 
-    return price_index
+    return result
 
 
 @router.get(
@@ -68,22 +65,13 @@ async def get_latest_index_price(
     summary="Получение записей по дате.",
     description="Возвращает цену по указанной валюте с фильтром по дате. Дата должна быть в формате DD.MM.YYYY .",
 )
-async def get_latest_index_price_by_date(
+async def get_index_price_by_date(
     ticker: Annotated[str, Query()],
     target_date: Annotated[str, Query(regex=r"^\d{2}\.\d{2}\.\d{4}$", alias="date")],
     get_session: AsyncSession = Depends(get_db_session),
 ):
-    start, end = get_timestamp_range(target_date)
 
     async with get_session as session:
-        query = (
-            select(PriceIndex)
-            .where(PriceIndex.ticker == ticker)
-            .where(PriceIndex.timestamp >= start)
-            .where(PriceIndex.timestamp < end)
-        )
+        result = await get_price_indexes_by_date(session, ticker, target_date)
 
-        result = await session.execute(query)
-        price_indexes_list = result.scalars().all()
-
-    return price_indexes_list
+    return result
